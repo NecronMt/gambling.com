@@ -18,16 +18,21 @@ Please don’t forget, your code should be production ready, clean and tested!
 - Usage of a PHP Framework (Not necessary but as a Laravel based company it's a bonus)
 - Use original txt file as input
 
-##Project Installation
+## Project Installation
 Go to the ```laravel-docker``` directory
 
 Run ```docker-compose up -d --build```
 
 Go to ```http://localhost:8080/```
 
-##Requirements
+## Requirements
 Docker Desktop v3 or later
 
 WSL2 installed & set up
 
 Make sure the /var/www folder permissions are under ```www-data```
+
+## Useful Commands
+DB bash: ```docker-compose exec database /bin/bash```
+
+PHP bash: ```docker-compose exec php-apache /bin/bash```
