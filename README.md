@@ -30,11 +30,9 @@ Make sure the /var/www folder permissions are under ```www-data```
 
 ## Project Installation
 
-Go to the ```laravel-docker``` directory.
-
 Go to the ```src/``` directory and copy the .env.example to .env.
 
-Run ```docker-compose up -d --build``` to build the dockers.
+Go to the ```laravel-docker``` directory and run ```docker-compose up -d --build``` to build the dockers.
 
 Go into the php-apache docker, ```docker-compose exec php-apache /bin/bash``` and run ```php artisan key:generate```.
 
