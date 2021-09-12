@@ -3,20 +3,20 @@
 namespace App\Traits;
 
 trait Base {
-
+    // Sort array
     function getSortedArray( $a ) {
         usort( $a, array( $this, 'affIDSort' ) );
         return $a;
     }
 
-    private function nameSort( $a, $b )
-    {
-        return strcmp( $a, $b );
-    }
-
     private function affIDSort( $a, $b )
     {
         return $a->affiliate_id - $b->affiliate_id;
+    }
+
+    private function nameSort( $a, $b )
+    {
+        return strcmp( $a, $b );
     }
 
     public function sortObject($array, $key)
@@ -28,16 +28,7 @@ trait Base {
         });
     }
 
-    public function srtaf($obj)
-    {
-        usort($numbers, function ($x, $y) {
-            if ($x === $y) {
-                return 0;
-            }
-            return $x < $y ? -1 : 1;
-        });
-    }
-
+    // calculate Great Circle Distance
     public function getDistanceBetweenPoints($latitude1, $longitude1, $latitude2, $longitude2)
     {
         $theta = $longitude1 - $longitude2;
@@ -46,6 +37,6 @@ trait Base {
         $distance = rad2deg($distance);
         $distance = $distance * 60 * 1.1515 * 1.609344;
 
-        return (round($distance, 2));
+        return round($distance, 2);
     }
 }

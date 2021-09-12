@@ -15,35 +15,46 @@ class DistanceController extends Controller
     public static $dublinLon = -6.2535495;
 
     public function index(){
+        try{
+            // check if file exists
+            $file_exists = Storage::disk('local')->exists(static::$affFile);
 
-        $file_exists = Storage::disk('local')->exists(static::$affFile);
+            if($file_exists) {
+                // open file
+                $content = fopen(Storage::path(static::$affFile),'r');
+                $array = array();
+                $i=0;
+                // go through file contents line by line
+                while(!feof($content)){
+                    $line = fgets($content);
+                    $line = str_replace("\n", "", $line);
+                    $obj = json_decode($line);
 
-        if($file_exists) {
+                    // calculate distance from dublin office
+                    $distance = $this->getDistanceBetweenPoints(static::$dublinLat, static::$dublinLon, $obj->latitude, $obj->longitude);
 
-            $content = fopen(Storage::path(static::$affFile),'r');
-            $array = array();
-            $i=0;
-            while(!feof($content)){
-                $line = fgets($content);
-                $line = str_replace("\n", "", $line);
-                $obj = json_decode($line);
-
-                $distance = $this->getDistanceBetweenPoints(static::$dublinLat, static::$dublinLon, $obj->latitude, $obj->longitude);
-
-                // Insert into the new array affiliates that are close or equal to 100km to the dublin office
-                if ($distance <= 100) {
-                    $obj->distance = $distance;
-                    $array = Arr::add($array, $i, $obj);
-                    $i++;
+                    // Insert into the new array affiliates that are close or equal to 100km to the dublin office
+                    if ($distance <= 100) {
+                        $obj->distance = $distance;
+                        $array = Arr::add($array, $i, $obj);
+                        $i++;
+                    }
                 }
-            }
-            fclose($content);
-            $array = $this->getSortedArray($array);
+                fclose($content);
 
-            return view('distance.index', ['file_exists' => $file_exists, 'attendees' => $array]);
+                // sort array by affiliate_id
+                $array = $this->getSortedArray($array);
+
+                return view('distance.index', ['file_exists' => $file_exists, 'attendees' => $array]);
+            }
+            else {
+                return view('distance.index', ['file_exists' => $file_exists]);
+            }
+        }catch (Exception $e){
+            // Log here
+            Log::error($e);
+            return 'Sorry! Something went wrong! Please contact the administrator.';
         }
-        else {
-            return view('distance.index', ['file_exists' => $file_exists]);
-        }
+
     }
 }
